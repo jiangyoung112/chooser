@@ -28,10 +28,64 @@
             justify-content: center;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            position: relative;
         }
 
         .site-button:hover {
             background-color: #45a080;
+        }
+
+        .site-button.offline {
+            background-color: #cccccc;
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+        }
+
+        .site-button.offline .status-indicator {
+            background-color: #ff0000;
+        }
+
+        .site-button.checking .status-indicator {
+            background-color: #ff9800;
+        }
+
+        /* 工具按钮样式 */
+        .tool-button {
+            background-color: #2196F3; /* 蓝色背景 */
+            color: white;
+            padding: 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .tool-button:hover {
+            background-color: #0b7dda;
+        }
+
+        /* 下载按钮样式（黑色主题） */
+        .site-button.download-button {
+            background-color: #000000; /* 黑色背景 */
+        }
+
+        .site-button.download-button:hover {
+            background-color: #333333; /* 悬停时的深灰色 */
+        }
+
+        .section-title {
+            margin: 40px auto 20px;
+            color: #333;
         }
     </style>
 </head>
@@ -40,16 +94,42 @@
     <h1>请选择您需要访问的网站:</h1>
     
     <div class="button-container">
-        <!-- 预留9个按钮，用占位内容方便替换 -->
-        <a href="https://openwebui.jiangyoung.eu.org/" target="_blank" class="site-button">OpenWebui</a>
-        <a href="https://comfyui.zzyswdns.top/" target="_blank" class="site-button">Comfyui</a>
-        <a href="https://coze.jiangyoung.eu.org" target="_blank" class="site-button">扣子开源版</a>
-        <a href="https://gradio.zzyswdns.top/" target="_blank" class="site-button">其他一</a>
-        <a href="https://gradio.xn--vsq9f020c59k.xyz/" target="_blank" class="site-button">其他二</a>
-        <a href="https://50000.zzyswdns.top/" target="_blank" class="site-button">特殊一：50000端口</a>
-        <a href="#" target="_blank" class="site-button">网站七</a>
-        <a href="#" target="_blank" class="site-button">网站八</a>
-        <a href="#" target="_blank" class="site-button">网站九</a>
+        <a href="https://openwebui.jiangyoung.eu.org/" target="_blank" class="site-button" data-site="openwebui">
+            <span class="button-text">OpenWebui</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="https://comfyui.zzyswdns.top/" target="_blank" class="site-button" data-site="comfyui">
+            <span class="button-text">Comfyui</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="https://coze.jiangyoung.eu.org" target="_blank" class="site-button" data-site="coze">
+            <span class="button-text">扣子开源版</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="https://gradio.zzyswdns.top/" target="_blank" class="site-button" data-site="other1">
+            <span class="button-text">其他一</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="https://gradio.xn--vsq9f020c59k.xyz/" target="_blank" class="site-button" data-site="other2">
+            <span class="button-text">其他二</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="https://50000.zzyswdns.top/" target="_blank" class="site-button" data-site="special1">
+            <span class="button-text">特殊一：50000端口</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="#" target="_blank" class="site-button" data-site="site7">
+            <span class="button-text">网站七</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="#" target="_blank" class="site-button" data-site="site8">
+            <span class="button-text">网站八</span>
+            <span class="status-indicator"></span>
+        </a>
+        <a href="#" target="_blank" class="site-button" data-site="site9">
+            <span class="button-text">网站九</span>
+            <span class="status-indicator"></span>
+        </a>
     </div>
 
     <!-- 可选说明 -->
@@ -59,9 +139,73 @@
         <img src="/qrcode.png" alt="二维码" class="qr-code-image" id="qrCodeImage">
         <p>扫描二维码快速访问</p>
     </div>
-    <!-- 下载客户端区域 -->
-    <div class="button-container" style="margin-top: 40px;">
-        <a href="/index.html" download class="site-button">下载网页源码</a>
+    
+    <!-- 工具按钮区域 -->
+    <h2 class="section-title">工具箱</h2>
+    <div class="button-container">
+        <a href="https://xn--vsq9f020c59k.xyz/" class="tool-button" id="tool1">影视</a>
+        <a href="https://pan.xn--vsq9f020c59k.xyz/" class="tool-button" id="tool2">盘搜</a>
+        <a href="#" class="tool-button" id="tool3">工具三</a>
     </div>
+
+    <!-- 下载客户端区域 -->
+    <h2 class="section-title">网页下载</h2>
+    <div class="button-container">
+        <a href="/index.html" download class="site-button download-button">下载网页源码</a>
+    </div>
+
+    <script>
+        // 网站状态检测函数
+        async function checkSiteStatus(button) {
+            const url = button.href;
+            const indicator = button.querySelector('.status-indicator');
+            
+            // 如果是下载链接或占位链接，跳过检测
+            if (url === '#' || url.includes('download') || button.classList.contains('tool-button')) {
+                return;
+            }
+            
+            // 设置为检测中状态
+            button.classList.add('checking');
+            
+            try {
+                // 使用 fetch 检测网站状态（设置5秒超时）
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(url, {
+                    method: 'HEAD', // 使用 HEAD 请求减少数据传输
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                // 根据响应状态判断网站是否可用
+                if (response.ok) {
+                    button.classList.remove('checking', 'offline');
+                } else {
+                    button.classList.remove('checking');
+                    button.classList.add('offline');
+                }
+            } catch (error) {
+                // 网络错误或超时
+                button.classList.remove('checking');
+                button.classList.add('offline');
+            }
+        }
+        
+        // 页面加载完成后开始检测所有网站状态
+        window.addEventListener('load', () => {
+            const siteButtons = document.querySelectorAll('.site-button');
+            
+            // 初始检测
+            siteButtons.forEach(button => checkSiteStatus(button));
+            
+            // 每隔30秒重新检测一次
+            setInterval(() => {
+                siteButtons.forEach(button => checkSiteStatus(button));
+            }, 30000);
+        });
+    </script>
 </body>
 </html>
