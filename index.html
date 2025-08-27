@@ -83,6 +83,16 @@
             background-color: #333333; /* 悬停时的深灰色 */
         }
 
+        /* 游戏分区按钮样式（黄色主题） */
+        .site-button.game-button {
+            background-color: #FFD700; /* 黄色背景 */
+            color: #333; /* 深色文字 */
+        }
+
+        .site-button.game-button:hover {
+            background-color: #FFC107; /* 悬停时的颜色 */
+        }
+
         .section-title {
             margin: 40px auto 20px;
             color: #333;
@@ -145,7 +155,7 @@
     <div class="button-container">
         <a href="https://xn--vsq9f020c59k.xyz/" class="tool-button" id="tool1">影视</a>
         <a href="https://pan.xn--vsq9f020c59k.xyz/" class="tool-button" id="tool2">盘搜</a>
-        <a href="#" class="tool-button" id="tool3">工具三</a>
+        <a href="https://openwebui.zzyswdns.top/" class="tool-button" id="tool3">Open-Webui常驻（beta）</a>
     </div>
 
     <!-- 下载客户端区域 -->
@@ -154,14 +164,28 @@
         <a href="/index.html" download class="site-button download-button">下载网页源码</a>
     </div>
 
+    <!-- 游戏分区 -->
+    <h2 class="section-title">游戏分区</h2>
+    <div class="button-container">
+        <a href="https://liferestart.zzyswdns.top/" target="_blank" class="site-button game-button" data-site="game1">
+            <span class="button-text">人生重开模拟器（beta）</span>
+        </a>
+        <a href="#" target="_blank" class="site-button game-button" data-site="game2">
+            <span class="button-text">游戏二</span>
+        </a>
+        <a href="#" target="_blank" class="site-button game-button" data-site="game3">
+            <span class="button-text">游戏三</span>
+        </a>
+    </div>
+
     <script>
         // 网站状态检测函数
         async function checkSiteStatus(button) {
             const url = button.href;
             const indicator = button.querySelector('.status-indicator');
             
-            // 如果是下载链接或占位链接，跳过检测
-            if (url === '#' || url.includes('download') || button.classList.contains('tool-button')) {
+            // 如果是下载链接、游戏分区链接或占位链接，跳过检测
+            if (url === '#' || url.includes('download') || button.classList.contains('tool-button') || button.classList.contains('game-button')) {
                 return;
             }
             
